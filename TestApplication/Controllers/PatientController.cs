@@ -89,13 +89,23 @@ namespace TestApplication.Controllers
         /// <summary>
         /// Получает список данных о пациентах
         /// </summary>
+        /// <param name="pageNum">Номер страницы</param>
+        /// <param name="sortProperty">Сортировка по заданному свойству</param>
         [HttpGet(nameof(GetList))]
-        public IEnumerable<PatientResponseList> GetList()
+        public IEnumerable<PatientResponseList> GetList(int pageNum, int sortProperty)
         {
+            CheckPageNum(pageNum);
+            CheckProperty<PatientProperty>(sortProperty);
+
+            int skipCount = takeCount * (pageNum - 1);
+
             using (ApplicationContext db = new ApplicationContext())
             {
                 List<PatientResponseList> list = new List<PatientResponseList>();
-                foreach (Patient patient in db.Patients.GetLoadedList(nameof(Patient.Region)))
+                foreach (Patient patient in db.Patients.GetLoadedList(nameof(Patient.Region))
+                    .OrderBy(Patient.GetOrderProperty(sortProperty))
+                    .Skip(skipCount)
+                    .Take(takeCount))
                     list.Add(patient.GetForList());
 
                 return list;
