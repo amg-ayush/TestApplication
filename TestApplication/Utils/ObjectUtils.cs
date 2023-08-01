@@ -37,5 +37,22 @@ namespace TestApplication.Utils
             foreach (string property in properties)
                 db.Entry(thisObject).Reference(property).Load();
         }
+
+        /// <summary>
+        /// Возвращает список объектов с подгруженными связанными свойствами
+        /// </summary>
+        /// <typeparam name="T">Тип объекта</typeparam>
+        /// <param name="dbTable">Таблица в БД</param>
+        /// <param name="properties">Свойства для подгрузки</param>
+        public static List<T> GetLoadedList<T>(this DbSet<T> dbTable, params string[] properties)
+            where T : BaseObject
+        {
+            IQueryable<T> result = dbTable;
+            
+            foreach (string property in properties)
+                result = result.Include(property);
+
+            return result.ToList();
+        }
     }
 }

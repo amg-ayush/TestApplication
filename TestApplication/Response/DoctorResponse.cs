@@ -1,9 +1,9 @@
 ﻿namespace TestApplication.Response
 {
     /// <summary>
-    /// Данные о враче
+    /// Базовые данные о враче
     /// </summary>
-    public class DoctorResponse
+    public class DoctorResponseBase
     {
         /// <summary>
         /// Идентификатор
@@ -14,20 +14,47 @@
         /// ФИО врача
         /// </summary>
         public string? FIO { get; set; }
+    }
+
+    /// <summary>
+    /// Данные о враче для детального представления
+    /// </summary>
+    public class DoctorResponseDetail : DoctorResponseBase
+    {
+        /// <summary>
+        /// Идентификатор кабинета
+        /// </summary>
+        public int OfficeId { get; set; }
 
         /// <summary>
-        /// Кабинет
+        /// Идентификатор специализации
         /// </summary>
-        public OfficeResponse Office { get; set; }
+        public int SpecializationId { get; set; }
 
         /// <summary>
-        /// Специализация
+        /// Идентификатор участка
         /// </summary>
-        public SpecializationResponse Specialization { get; set; }
+        public int? RegionId { get; set; }
+    }
+
+    /// <summary>
+    /// Данные о враче для списочного представления
+    /// </summary>
+    public class DoctorResponseList : DoctorResponseBase
+    {
+        /// <summary>
+        /// Номер кабинета
+        /// </summary>
+        public int OfficeNum { get; set; }
 
         /// <summary>
-        /// Участок
+        /// Название специализации
         /// </summary>
-        public RegionResponse? Region { get; set; }
+        public string SpecializationName { get; set; }
+
+        /// <summary>
+        /// Номер участка
+        /// </summary>
+        public int? RegionNum { get; set; }
     }
 }

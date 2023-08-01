@@ -3,9 +3,9 @@
 namespace TestApplication.Response
 {
     /// <summary>
-    /// Данные о пациенте
+    /// Базовые данные о пациенте
     /// </summary>
-    public class PatientResponse
+    public class PatientResponseBase
     {
         /// <summary>
         /// Идентификатор
@@ -41,10 +41,27 @@ namespace TestApplication.Response
         /// Пол
         /// </summary>
         public Gender Gender { get; set; }
+    }
 
+    /// <summary>
+    /// Данные о пациенте для детального представления
+    /// </summary>
+    public class PatientResponseDetail : PatientResponseBase
+    {
         /// <summary>
-        /// Данные об участке
+        /// Идентификатор участка
         /// </summary>
-        public RegionResponse Region { get; set; }
+        public int RegionId { get; set; }
+    }
+
+    /// <summary>
+    /// Данные о пациенте для списочного представления
+    /// </summary>
+    public class PatientResponseList : PatientResponseBase
+    {
+        /// <summary>
+        /// Номер участка
+        /// </summary>
+        public int RegionNum { get; set; }
     }
 }

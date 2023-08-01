@@ -16,7 +16,7 @@ namespace TestApplication.Controllers
         /// </summary>
         /// <param name="request">Данные пациента</param>
         [HttpPost(nameof(Create))]
-        public PatientResponse Create(PatientRequest request)
+        public PatientResponseDetail Create(PatientRequest request)
         {
             using (ApplicationContext db = new ApplicationContext())
             {
@@ -54,7 +54,7 @@ namespace TestApplication.Controllers
         /// </summary>
         /// <param name="request">Данные пациента</param>
         [HttpPut(nameof(Update))]
-        public PatientResponse Update(PatientRequest request)
+        public PatientResponseDetail Update(PatientRequest request)
         {
             using (ApplicationContext db = new ApplicationContext())
             {
@@ -76,13 +76,29 @@ namespace TestApplication.Controllers
         /// </summary>
         /// <param name="id">Идентификатор пациента</param>
         [HttpGet(nameof(Get))]
-        public PatientResponse Get(int id)
+        public PatientResponseDetail Get(int id)
         {
             using (ApplicationContext db = new ApplicationContext())
             {
                 Patient patient = db.Patients.GetObject(id);
                 db.LoadProperties(patient, nameof(Patient.Region));
                 return patient.Get();
+            }
+        }
+
+        /// <summary>
+        /// Получает список данных о пациентах
+        /// </summary>
+        [HttpGet(nameof(GetList))]
+        public IEnumerable<PatientResponseList> GetList()
+        {
+            using (ApplicationContext db = new ApplicationContext())
+            {
+                List<PatientResponseList> list = new List<PatientResponseList>();
+                foreach (Patient patient in db.Patients.GetLoadedList(nameof(Patient.Region)))
+                    list.Add(patient.GetForList());
+
+                return list;
             }
         }
     }

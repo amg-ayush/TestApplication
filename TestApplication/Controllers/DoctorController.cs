@@ -16,7 +16,7 @@ namespace TestApplication.Controllers
         /// </summary>
         /// <param name="request">Данные о враче</param>
         [HttpPost(nameof(Create))]
-        public DoctorResponse Create(DoctorRequest request)
+        public DoctorResponseDetail Create(DoctorRequest request)
         {
             using (ApplicationContext db = new ApplicationContext())
             {
@@ -51,7 +51,7 @@ namespace TestApplication.Controllers
         /// </summary>
         /// <param name="request">Данные о враче</param>
         [HttpPut(nameof(Update))]
-        public DoctorResponse Update(DoctorRequest request)
+        public DoctorResponseDetail Update(DoctorRequest request)
         {
             using (ApplicationContext db = new ApplicationContext())
             {
@@ -70,13 +70,29 @@ namespace TestApplication.Controllers
         /// </summary>
         /// <param name="id">Идентификатор врача</param>
         [HttpGet(nameof(Get))]
-        public DoctorResponse Get(int id)
+        public DoctorResponseDetail Get(int id)
         {
             using (ApplicationContext db = new ApplicationContext())
             {
                 Doctor doctor = db.Doctors.GetObject(id);
                 db.LoadProperties(doctor, nameof(Doctor.Office), nameof(Doctor.Specialization), nameof(Doctor.Region));
                 return doctor.Get();
+            }
+        }
+
+        /// <summary>
+        /// Получает список данных о пациентах
+        /// </summary>
+        [HttpGet(nameof(GetList))]
+        public IEnumerable<DoctorResponseList> GetList()
+        {
+            using (ApplicationContext db = new ApplicationContext())
+            {
+                List<DoctorResponseList> list = new List<DoctorResponseList>();
+                foreach (Doctor doctor in db.Doctors.GetLoadedList(nameof(Doctor.Office), nameof(Doctor.Specialization), nameof(Doctor.Region)))
+                    list.Add(doctor.GetForList());
+
+                return list;
             }
         }
     }
